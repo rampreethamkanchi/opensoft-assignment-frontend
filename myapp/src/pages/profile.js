@@ -1,21 +1,65 @@
 // Profile.js
-import React, { useState } from 'react';
-import './profile.css'; // Updated CSS file name assuming you've renamed it
+import React, { useState, useEffect } from "react";
+import "./profile.css";
 
-const Profile = () => {
+const Profile = ({ userdata }) => {
+  // console.log(props);
+  // let userdata= props.userdata;
+  // console.log("hi");
+  // console.log(userdata.username);
   const [isEditing, setIsEditing] = useState(false);
-  const [username, setUsername] = useState('YourUsername');
-  const [email, setEmail] = useState('your.email@example.com');
+  const [usernameList, setUsernameList] = useState([]);
+  const [originalUserData, setOriginalUserData] = useState(userdata);
+  // const [originalUsername, setOriginalUsername] = useState(userdata.username);
+  const [username, setUsername] = useState(userdata.username);
+  const [email, setEmail] = useState(userdata.email);
+  const [password, setPassword] = useState(userdata.password);
+  useEffect(() => {
+    const getUserNames = async () => {
+      let username_list = await fetch("/allusernames/", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }).then((res) => res.json());
+      // console.log(username_list);
+      setUsernameList(username_list);
+    };
+    getUserNames();
+  }, [originalUserData.username]);
 
   const handleEditClick = () => {
     setIsEditing(true);
   };
 
-  const handleSaveClick = () => {
-    setIsEditing(false);
+  const handleSaveClick = async () => {
+    // setIsEditing(false);
+    // console.log("originalUsername ", originalUserData.username);
+    let gotresult = await fetch(`/userupdate/${originalUserData.username}/`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, email, password }),
+    }).then((res) => res.json());
+    // console.log("gotresult ", gotresult);
+    if (gotresult.message === "bad") {
+      alert("Username or Email updated is invalid or already exists");
+    } else {
+      setOriginalUserData(gotresult);
+      // userdata=gotresult;
+      // console.log("updated userdata ",originalUserData);
+      // setOriginalUsername(username);
+      setIsEditing(false);
+    }
   };
 
   const handleCancelClick = () => {
+    setUsername(originalUserData.username);
+    setEmail(originalUserData.email);
+    setPassword(originalUserData.password);
+    // setEmail(userdata.email);
+    // setPassword(userdata.password);
     setIsEditing(false);
   };
 
@@ -45,7 +89,23 @@ const Profile = () => {
                 id="email"
                 value={email}
                 readOnly={!isEditing}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  // console.log("email ", e.target.value);
+                  setEmail(e.target.value);
+                }}
+              />
+            </div>
+            <div className="input-box">
+              <label htmlFor="password">Password</label>
+              <input
+                type="email"
+                id="password"
+                value={password}
+                readOnly={!isEditing}
+                onChange={(e) => {
+                  // console.log("password ", e.target.value);
+                  setPassword(e.target.value);
+                }}
               />
             </div>
             {isEditing ? (
@@ -62,9 +122,9 @@ const Profile = () => {
           <div className="profile-section">
             <h3>All Profiles</h3>
             <ul className="profile-list">
-              <li>Username1</li>
-              <li>Username2</li>
-              {/* Add more profiles as needed */}
+              {usernameList.map((user) => {
+                return <li>{user.username}</li>;
+              })}
             </ul>
           </div>
         </div>
