@@ -16,14 +16,18 @@ const SignUp = () => {
       email: email,
       password: password,
     };
+
+    // const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     // console.log(userSignupInfo);
     let gotresult = await fetch("/userregistration/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        // 'X-CSRFToken': csrftoken ,
       },
       body: JSON.stringify(userSignupInfo),
     }).then((res) => res.json());
+    console.log("gotresult ", gotresult);
     if (gotresult.message === "bad") {
       alert("Username or Email is invalid or already exists");
     } else {
