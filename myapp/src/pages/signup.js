@@ -7,7 +7,6 @@ const SignUp = () => {
   const [result, setResult] = useState({});
   const handleSignUp = async (e) => {
     e.preventDefault();
-    // console.log('Sign Up button clicked');
     let username = document.getElementById("username").value;
     let email = document.getElementById("email").value;
     let password = document.getElementById("password").value;
@@ -17,13 +16,10 @@ const SignUp = () => {
       password: password,
     };
 
-    // const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    // console.log(userSignupInfo);
     let gotresult = await fetch("/userregistration/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // 'X-CSRFToken': csrftoken ,
       },
       body: JSON.stringify(userSignupInfo),
     }).then((res) => res.json());
@@ -68,8 +64,6 @@ const SignUp = () => {
     };
     const renderSignUp = () => {
       if (validUser) {
-        // console.log('passing',result);
-        // console.log(result);
         return <Profile userdata={result} />;
       } else {
         return showSignUp();
