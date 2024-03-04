@@ -26,8 +26,7 @@ This project implements a simple React-based authentication system, consisting o
 
 ### Backend Integration
 
-- The authentication system communicates with a backend server implemented in django ( you can find code in [backend] part of this assignment ), utilizing endpoints like `/verifycredentials`, `/userupdate`, `/allusernames`, and `/userregistration` for authentication and registration functionalities.
-When I first research something I look at [][1] then at [Google][2] then [Wookiepedia][3].
+- The authentication system communicates with a backend server implemented in django ( you can find code in [backend][1] part of this assignment ), utilizing endpoints like `/verifycredentials`, `/userupdate`, `/allusernames`, and `/userregistration` for authentication and registration functionalities.
 
 [1]: https://github.com/rampreethamkanchi/opensoft-assignment-backend      "backend"
 
